@@ -1,51 +1,33 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="style.css">
-    <title>SoChat</title>
-</head>
-<body>
 <?php
+date_default_timezone_set('UTC');
+
+$users = array (
+    "sophia"=>"11",
+    "alex"=>"10"
+);
+
 $login = $_GET['login'];
 $password = $_GET['password'];
+$txt = $_GET['txt'];
+$date = date('l jS \of F Y h:i:s A');
 
-$logPas = json_decode(file_get_contents('src/file.json'));
-$num = 0;
+if(($users[$login]  === $password) && ($login != null))
+{
+    $message = array(
+        'login' => $login,
+        'txt' => $txt,
+        'date' => $date
+    );
 
-for ($i = 0; $i < sizeof($logPas->usersData); $i++) {
-    if($logPas->usersData[$i]->login === $login) {
-        $num = $i;
-        break;
-    }
-}
-
-if(($logPas->usersData[$num]->login === $login) && ($logPas->usersData[$num]->password === $password)) {
-    $text = $_GET['text'];
-    $date = date('Y-m-d H:i:s');
-    $messenger = array('login' => $login, 'mess' => $text, 'date' => $date);
-    array_push($logPas->message, $messenger);
-    file_put_contents('src/file.json', json_encode($logPas));
+    $file = json_decode(file_get_contents('file.json'));
+    array_push($file->message, $message);
+    file_put_contents('file.json', json_encode($file));
 }
 else {
-    echo "Wrong login or password";
+    echo "Пользователь не авторизован" . "<br/>";
 }
 
-$logPas = json_decode(file_get_contents("src/file.json"));
+$file = file_get_contents('file.json');
+echo $file;
 
-for ($i = 0; $i < sizeof($logPas->message); $i++) {
-    echo "----------------------------";
-    echo "<br/>";
-    echo $logPas->message[$i]->login;
-    echo "<br/>";
-    echo $logPas->message[$i]->mess;
-    echo "<br/>";
-    echo $logPas->message[$i]->date;
-    echo "<br/>";
-}
-?>
-</body>
-</html>
+
