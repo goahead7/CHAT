@@ -23,7 +23,8 @@ if(($users[$login]  === $password) && ($login != null))
     array_push($file->message, $message);
     file_put_contents('file.json', json_encode($file));
 }
-else {
+else
+{
     echo "Пользователь не авторизован" . "<br/>";
 }
 
